@@ -6,6 +6,27 @@ const checkDatabaseConnection = async () => {
     return result.rows[0];
 };
 
+const validationEmail = async (email) => {
+    const query = `SELECT * FROM users WHERE email = $1`;
+    const result = await db.query(query, [email]);
+    return result.rows[0];
+};
+
+const createUser = async(userData) => {
+    const {email, first_name, last_name, password} = userData;
+    const query = `
+    INSERT INTO users (email, first_name, last_name, password, balance )
+    VALUES ($1, $2, $3,$4,$5) 
+    RETURNING user_id, email, first_name, last_name
+    `;
+    const values = [email, first_name, last_name, password, 0];
+    const result = await db.query(query, values);
+    return result.rows[0];
+}
+
+
 module.exports = {
-    checkDatabaseConnection
+    checkDatabaseConnection,
+    validationEmail,
+    createUser
 };
