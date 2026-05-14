@@ -93,11 +93,30 @@ const updateProfile = asyncHandler(async (req, res, next) => {
         profile_image: updatedUser.profile_image || null
     });
 });
+const updateImage = asyncHandler(async (req, res, next) => {
+    const email = req.user.email; // Dari payload JWT
+
+    if (!req.file) {
+        throw new ErrorResponse("Image tidak boleh kosong", 400, 102);
+    }
+
+    const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+
+    const updatedUser = await userModel.updateProfileImage(email, imageUrl);
+
+    return success(res, "Update Profile Image berhasil", {
+        email: updatedUser.email,
+        first_name: updatedUser.first_name,
+        last_name: updatedUser.last_name,
+        profile_image: updatedUser.profile_image
+    });
+});
 
 module.exports = {
     healthCheck,
     registration,
     login,
     getProfile,
-    updateProfile
+    updateProfile,
+    updateImage
 };

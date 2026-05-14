@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
 const authMiddleware = require("../middlewares/authMiddleware");
+const upload = require("../middlewares/uploadMIddleware");
 
 /**
  * @swagger
@@ -123,6 +124,29 @@ const authMiddleware = require("../middlewares/authMiddleware");
  *         description: Update Pofile berhasil
  *       401:
  *         description: Token tidak tidak valid atau kadaluwarsa (Status 108)
+ * /profile/image:
+ *   put:
+ *     summary: Update profile image
+ *     tags:
+ *       - Module Membership
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Update Profile Image berhasil
+ *       400:
+ *         description: Format Image tidak sesuai (Status 102)
+ *       401:
+ *         description: Token tidak valid atau kadaluwarsa (Status 108)
  */
 
 router.post("/registration", authController.registration);
@@ -130,4 +154,5 @@ router.get("/health-check", authController.healthCheck);
 router.post("/login", authController.login);
 router.get("/profile", authMiddleware, authController.getProfile);
 router.put('/profile/update', authMiddleware, authController.updateProfile);
+router.put('/profile/image', authMiddleware, upload.single('file'), authController.updateImage);
 module.exports = router;

@@ -35,11 +35,19 @@ const updateProfile = async (email, first_name, last_name) => {
     const result = await db.query(query, values);
     return result.rows[0];
 };
+const updateProfileImage = async (email, imageUrl) => {
+    const query = 'UPDATE users SET profile_image = $1 WHERE email = $2 RETURNING *';
+    const values = [imageUrl, email];
+    
+    const result = await db.query(query, values);
+    return result.rows[0];
+};
 
 
 module.exports = {
     checkDatabaseConnection,
     validationEmail,
     createUser,
-    updateProfile
+    updateProfile,
+    updateProfileImage
 };
