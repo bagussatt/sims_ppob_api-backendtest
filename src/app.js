@@ -7,7 +7,9 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 const authRoutes = require('./routes/authRoutes');
+const bannerRoutes = require('./routes/bannerRoutes');
 const ErrorResponse = require('./utils/errorResponse');
+const serviceRoutes = require('../src/routes/serviceRoutes')
 
 dotenv.config();
 const app = express();
@@ -18,7 +20,7 @@ app.use(express.json());
 
 // Routes & Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/', authRoutes);
+app.use('/', authRoutes,bannerRoutes,serviceRoutes);
 app.get('/', (req, res) => res.redirect('/api-docs'));
 
 app.use((req, res) => res.status(404).json({ status: 404, message: "Not Found", data: null }));
