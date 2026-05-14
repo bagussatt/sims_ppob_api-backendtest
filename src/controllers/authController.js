@@ -56,9 +56,26 @@ const login = asyncHandler(async (req, res, next) => {
 
     return success(res, "Login Berhasil", { token });
 });
+const getProfile = asyncHandler(async (req, res, next) => {
+
+    const email = req.user.email;
+    const user = await userModel.validationEmail(email);
+
+    if (!user) {
+        throw new ErrorResponse("User tidak ditemukan", 404, 101);
+    }
+
+    return success(res, "Sukses", {
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        profile_image: user.profile_image || null
+    });
+});
 
 module.exports = {
     healthCheck,
     registration,
-    login
+    login,
+    getProfile
 };
