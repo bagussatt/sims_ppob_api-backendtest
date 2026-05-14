@@ -49,9 +49,42 @@ const authController = require('../controllers/authController');
  *         description: Berhasil registrasi
  *       400:
  *         description: Validasi gagal (Status 102)
+ * /login:
+ *   post:
+ *     summary: Masuk menggunakan akun yang sudah terdaftar
+ *     description: Endpoint untuk autentikasi user dan mendapatkan JWT Token. Token berlaku selama 12 jam.
+ *     tags:
+ *       - Module Membership
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email user yang sudah terdaftar
+ *                 example: "bagus@example.com"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: Password akun (minimal 8 karakter)
+ *                 example: "password123SL" 
+ *     responses:
+ *       200:
+ *         description: Login Berhasil
+ *       400:
+ *         description: Parameter email tidak sesuai format / Password kurang dari 8 karakter
+ *       401:
+ *         description: Email atau password salah
  */
 
 router.post('/registration', authController.registration);
 router.get('/health-check', authController.healthCheck);
-
+router.post('/login',authController.login);
 module.exports = router;

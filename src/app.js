@@ -19,7 +19,6 @@ app.use(express.json());
 // Routes & Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/', authRoutes);
-
 app.get('/', (req, res) => res.redirect('/api-docs'));
 
 app.use((req, res) => res.status(404).json({ status: 404, message: "Not Found", data: null }));

@@ -1,6 +1,6 @@
 module.exports = (err, req, res, next) => {
-    const statusCode = err.status || 500;
-    const errorCode = err.errorCode || statusCode;
+    let statusCode = err.statusCode || 500;
+    let errorCode = err.errorCode || statusCode;
 
     res.status(statusCode).json({
         status: errorCode,
