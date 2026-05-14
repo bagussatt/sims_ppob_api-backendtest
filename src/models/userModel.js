@@ -23,10 +23,23 @@ const createUser = async(userData) => {
     const result = await db.query(query, values);
     return result.rows[0];
 }
+const updateProfile = async (email, first_name, last_name) => {
+    const query = `
+        UPDATE users 
+        SET first_name = $1, last_name = $2 
+        WHERE email = $3 
+        RETURNING email, first_name, last_name, profile_image
+    `;
+    const values = [first_name, last_name, email];
+    
+    const result = await db.query(query, values);
+    return result.rows[0];
+};
 
 
 module.exports = {
     checkDatabaseConnection,
     validationEmail,
-    createUser
+    createUser,
+    updateProfile
 };

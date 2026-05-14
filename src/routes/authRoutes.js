@@ -95,10 +95,39 @@ const authMiddleware = require("../middlewares/authMiddleware");
  *         description: Sukses
  *       401:
  *         description: Token tidak tidak valid atau kadaluwarsa (Status 108)
+ * /profile/update:
+ *   put:
+ *     summary: Update informasi profile user
+ *     tags:
+ *       - Module Membership
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - first_name
+ *               - last_name
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *                 example: "Bagus"
+ *               last_name:
+ *                 type: string
+ *                 example: "Satrio Update"
+ *     responses:
+ *       200:
+ *         description: Update Pofile berhasil
+ *       401:
+ *         description: Token tidak tidak valid atau kadaluwarsa (Status 108)
  */
 
 router.post("/registration", authController.registration);
 router.get("/health-check", authController.healthCheck);
 router.post("/login", authController.login);
 router.get("/profile", authMiddleware, authController.getProfile);
+router.put('/profile/update', authMiddleware, authController.updateProfile);
 module.exports = router;

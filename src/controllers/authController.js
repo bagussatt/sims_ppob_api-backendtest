@@ -72,10 +72,32 @@ const getProfile = asyncHandler(async (req, res, next) => {
         profile_image: user.profile_image || null
     });
 });
+const updateProfile = asyncHandler(async (req, res, next) => {
+    const { first_name, last_name } = req.body;
+    const email = req.user.email; 
+
+    if (!first_name || !last_name) {
+        throw new ErrorResponse("Parameter first_name dan last_name wajib diisi", 400, 102);
+    }
+
+    const updatedUser = await userModel.updateProfile(email, first_name, last_name);
+
+    if (!updatedUser) {
+        throw new ErrorResponse("User tidak ditemukan", 404, 101);
+    }
+
+    return success(res, "Update Pofile berhasil", {
+        email: updatedUser.email,
+        first_name: updatedUser.first_name,
+        last_name: updatedUser.last_name,
+        profile_image: updatedUser.profile_image || null
+    });
+});
 
 module.exports = {
     healthCheck,
     registration,
     login,
-    getProfile
+    getProfile,
+    updateProfile
 };
