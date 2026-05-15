@@ -31,8 +31,39 @@ const topUp = asyncHandler(async (req, res, next) => {
         balance: newBalance
     });
 });
+const postTransaction = asyncHandler(async (req, res, next) => {
+    const { service_code } = req.body;
+    const email = req.user.email;
+
+    if (!service_code) {
+        throw new ErrorResponse("Service code harus diisi", 400, 102);
+    }
+
+    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const invoiceNumber = `INV${dateStr}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    try {
+        const result = await balanceModel.transactionModel.createPayment(email, service_code, invoiceNumber);
+
+        return success(res, "Transaksi berhasil", {
+            invoice_number: result.invoice_number,
+            service_code: result.service_code,
+            service_name: result.service_name,
+            transaction_type: result.transaction_type,
+            total_amount: result.total_amount,
+            created_on: result.created_on
+        });
+    } catch (err) {
+        if (err.customError) {
+            throw new ErrorResponse(err.message, err.code, err.status);
+        }
+        throw err;
+    }
+});
+
 
 module.exports = {
     getBalance,
-    topUp
+    topUp,
+    postTransaction
 };
