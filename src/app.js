@@ -9,7 +9,8 @@ const errorMiddleware = require('./middlewares/errorMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const bannerRoutes = require('./routes/bannerRoutes');
 const ErrorResponse = require('./utils/errorResponse');
-const serviceRoutes = require('../src/routes/serviceRoutes')
+const serviceRoutes = require('../src/routes/serviceRoutes');
+const transactionRoutes = require('../src/routes/transactionRoutes');
 
 dotenv.config();
 const app = express();
@@ -20,7 +21,7 @@ app.use(express.json());
 
 // Routes & Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/', authRoutes,bannerRoutes,serviceRoutes);
+app.use('/', authRoutes,bannerRoutes,serviceRoutes,transactionRoutes);
 app.get('/', (req, res) => res.redirect('/api-docs'));
 
 app.use((req, res) => res.status(404).json({ status: 404, message: "Not Found", data: null }));
