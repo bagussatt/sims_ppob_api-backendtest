@@ -19,7 +19,7 @@ const topUp = asyncHandler(async (req, res, next) => {
   const { top_up_amount } = req.body;
   const email = req.user.email;
 
-  if (typeof top_up_amount !== "number" || top_up_amount < 0) {
+  if (typeof top_up_amount !== "number" || top_up_amount <= 0) {
     throw new ErrorResponse(
       "Parameter amount hanya boleh angka dan tidak boleh lebih kecil dari 0",
       400,
