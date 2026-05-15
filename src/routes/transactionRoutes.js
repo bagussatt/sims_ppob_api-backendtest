@@ -76,6 +76,29 @@ const { transactionModel } = require("../models/transactionModel");
  *         description: Transaksi berhasil
  *       400:
  *         description: Saldo tidak mencukupi / Service tidak ditemukan (Status 102)
+ * /transaction/history:
+ *   get:
+ *     summary: Mendapatkan riwayat transaksi user
+ *     tags:
+ *       - Module Transaction
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Batasi jumlah data yang tampil (opsional)
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *         description: Jumlah data yang dilewati (opsional)
+ *     responses:
+ *       200:
+ *         description: Get History Berhasil
+ *       401:
+ *         description: Token tidak valid atau kadaluwarsa
  */
 
 router.get("/balance", authMiddleware, transactionControllerss.getBalance);
@@ -85,5 +108,6 @@ router.post(
   authMiddleware,
   transactionControllerss.postTransaction,
 );
+router.get("/transaction/history",authMiddleware, transactionControllerss.getTransactionHistory)
 
 module.exports = router;

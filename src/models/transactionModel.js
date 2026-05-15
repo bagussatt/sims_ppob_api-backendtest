@@ -125,10 +125,36 @@ const transactionModel = {
       client.release();
     }
   },
+
+  getTransactionHistory: async (email, limit) => {
+    let query = `
+            SELECT 
+                t.invoice_number, 
+                t.transaction_type, 
+                t.description, 
+                t.total_amount, 
+                t.created_on
+            FROM transactions t
+            JOIN users u ON t.user_id = u.user_id
+            WHERE u.email = $1
+            ORDER BY t.created_on DESC
+        `;
+
+    const values = [email];
+
+    if (limit && !isNaN(limit)) {
+      query += ` LIMIT $2`;
+      values.push(parseInt(limit));
+    }
+
+    const result = await db.pool.query(query, values);
+    return result.rows.map((row) => ({
+      ...row,
+      total_amount: Number(row.total_amount),
+    }));
+  },
 };
-
-
-module.exports = { 
-  balanceModel, 
-  transactionModel 
+module.exports = {
+  balanceModel,
+  transactionModel,
 };
