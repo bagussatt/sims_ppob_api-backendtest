@@ -27,8 +27,11 @@ app.get('/', (req, res) => res.redirect('/api-docs'));
 app.use((req, res) => res.status(404).json({ status: 404, message: "Not Found", data: null }));
 app.use(errorMiddleware);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-console.log(`Dokumentasi Swagger: http://localhost:${PORT}/api-docs`);
+// Only start server if this file is run directly (not required by tests)
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  console.log(`Dokumentasi Swagger: http://localhost:${PORT}/api-docs`);
+}
 
 module.exports = app;
