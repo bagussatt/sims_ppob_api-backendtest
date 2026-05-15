@@ -15,7 +15,24 @@ const getBalance = asyncHandler(async (req, res, next) => {
         balance: currentBalance
     });
 });
+const topUp = asyncHandler(async (req, res, next) => {
+    const { top_up_amount } = req.body;
+    const email = req.user.email;
+
+    if (typeof top_up_amount !== 'number' || top_up_amount < 0) {
+        throw new ErrorResponse("Parameter amount hanya boleh angka dan tidak boleh lebih kecil dari 0", 400, 102);
+    }
+
+    const invoiceNumber = `INV-${Date.now()}`;
+
+    const newBalance = await balanceModel.topUp(email, top_up_amount, invoiceNumber);
+
+    return success(res, "Top Up Balance Berhasil", {
+        balance: newBalance
+    });
+});
 
 module.exports = {
-    getBalance
+    getBalance,
+    topUp
 };
